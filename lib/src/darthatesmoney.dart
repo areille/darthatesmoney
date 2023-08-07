@@ -27,9 +27,11 @@ class Darthatesmoney {
   /// This ihatemoney.org project uri.
   Uri get projectUri => Uri.parse('${_baseAPIUrl}projects/$projectName');
 
-  /// The ihatemoney.org uri, containing the HTTP Basic info for auth.
-  Uri authenticatedUri(Uri uri) =>
-      uri.replace(userInfo: '$projectName:$privateCode');
+  /// The authentication header
+  MapEntry<String, String> get authHeader => MapEntry(
+        'authorization',
+        'Basic ${base64.encode(utf8.encode('$projectName:$privateCode'))}',
+      );
 
   // ========
   // PROJECTS
@@ -39,7 +41,12 @@ class Darthatesmoney {
   ///
   /// [Docs](https://ihatemoney.readthedocs.io/en/latest/api.html#getting-information-about-the-project)
   Future<ProjectInfo> getProjectInfo() async {
-    final response = await http.get(authenticatedUri(projectUri));
+    final response = await http.get(
+      projectUri,
+      headers: {
+        authHeader.key: authHeader.value,
+      },
+    );
 
     return ProjectInfo.fromJson(response.body);
   }
@@ -73,8 +80,12 @@ class Darthatesmoney {
 
   /// Lists a project members. See [this link](https://ihatemoney.readthedocs.io/en/latest/api.html#members)
   Future<List<Member>> listMembers() async {
-    final response =
-        await http.get(authenticatedUri(Uri.parse('$projectUri/members')));
+    final response = await http.get(
+      Uri.parse('$projectUri/members'),
+      headers: {
+        authHeader.key: authHeader.value,
+      },
+    );
 
     return (json.decode(response.body) as List<dynamic>)
         .map((x) => Member.fromMap(x as Map<String, dynamic>))
@@ -89,8 +100,12 @@ class Darthatesmoney {
   ///
   /// [Docs](https://ihatemoney.readthedocs.io/en/latest/api.html#bills)
   Future<List<Bill>> listBills() async {
-    final response =
-        await http.get(authenticatedUri(Uri.parse('$projectUri/bills')));
+    final response = await http.get(
+      Uri.parse('$projectUri/bills'),
+      headers: {
+        authHeader.key: authHeader.value,
+      },
+    );
 
     return (json.decode(response.body) as List<dynamic>)
         .map((x) => Bill.fromMap(x as Map<String, dynamic>))
@@ -101,8 +116,12 @@ class Darthatesmoney {
   ///
   /// [Docs](https://ihatemoney.readthedocs.io/en/latest/api.html#bills)
   Future<Bill> getBill(String id) async {
-    final response =
-        await http.get(authenticatedUri(Uri.parse('$projectUri/bills/$id')));
+    final response = await http.get(
+      Uri.parse('$projectUri/bills/$id'),
+      headers: {
+        authHeader.key: authHeader.value,
+      },
+    );
 
     return Bill.fromMap(json.decode(response.body) as Map<String, dynamic>);
   }
@@ -110,8 +129,12 @@ class Darthatesmoney {
   /// Deletes a bill.
   ///
   /// [Docs](https://ihatemoney.readthedocs.io/en/latest/api.html#bills)
-  Future<void> deleteBill(String id) =>
-      http.delete(authenticatedUri(Uri.parse('$projectUri/bills/$id')));
+  Future<void> deleteBill(String id) => http.delete(
+        Uri.parse('$projectUri/bills/$id'),
+        headers: {
+          authHeader.key: authHeader.value,
+        },
+      );
 
   // ==========
   // STATISTICS
@@ -121,8 +144,12 @@ class Darthatesmoney {
   ///
   /// [Docs](https://ihatemoney.readthedocs.io/en/latest/api.html#statistics)
   Future<List<Statistics>> listStatistics() async {
-    final response =
-        await http.get(authenticatedUri(Uri.parse('$projectUri/statistics')));
+    final response = await http.get(
+      Uri.parse('$projectUri/statistics'),
+      headers: {
+        authHeader.key: authHeader.value,
+      },
+    );
 
     return (json.decode(response.body) as List<dynamic>)
         .map((x) => Statistics.fromMap(x as Map<String, dynamic>))

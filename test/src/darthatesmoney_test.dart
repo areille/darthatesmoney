@@ -16,11 +16,9 @@ void main() {
         'https://ihatemoney.org/api/projects/demo',
       );
     });
-    test('auth uri', () {
-      expect(
-        demo.authenticatedUri(demo.projectUri).toString(),
-        'https://demo:demo@ihatemoney.org/api/projects/demo',
-      );
+    test('auth headers', () {
+      expect(demo.authHeader.key, 'authorization');
+      expect(demo.authHeader.value, 'Basic ZGVtbzpkZW1v');
     });
     test('get project info', () async {
       final projectInfo = await demo.getProjectInfo();
