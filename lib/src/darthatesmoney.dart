@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:darthatesmoney/src/model/bill.dart';
 import 'package:darthatesmoney/src/model/member.dart';
 import 'package:darthatesmoney/src/model/project_info.dart';
 import 'package:http/http.dart' as http;
@@ -65,13 +66,49 @@ class Darthatesmoney {
     return response.body;
   }
 
+  // ========
+  // MEMBERS
+  // ========
+
   /// Lists a project members. See [this link](https://ihatemoney.readthedocs.io/en/latest/api.html#members)
-  Future<Set<Member>> listMembers() async {
+  Future<List<Member>> listMembers() async {
     final response =
         await http.get(authenticatedUri(Uri.parse('$projectUri/members')));
 
     return (json.decode(response.body) as List<dynamic>)
         .map((x) => Member.fromMap(x as Map<String, dynamic>))
-        .toSet();
+        .toList();
   }
+
+  // ======
+  // BILLS
+  // ======
+
+  /// Lists a project bills.
+  ///
+  /// [Docs](https://ihatemoney.readthedocs.io/en/latest/api.html#bills)
+  Future<List<Bill>> listBills() async {
+    final response =
+        await http.get(authenticatedUri(Uri.parse('$projectUri/bills')));
+
+    return (json.decode(response.body) as List<dynamic>)
+        .map((x) => Bill.fromMap(x as Map<String, dynamic>))
+        .toList();
+  }
+
+  /// Fetch a bill.
+  ///
+  /// [Docs](https://ihatemoney.readthedocs.io/en/latest/api.html#bills)
+  Future<Bill> getBill(String id) async {
+    final response =
+        await http.get(authenticatedUri(Uri.parse('$projectUri/bills/$id')));
+
+    return Bill.fromMap(json.decode(response.body) as Map<String, dynamic>);
+  }
+
+  /// Deletes a bill.
+  ///
+  /// [Docs](https://ihatemoney.readthedocs.io/en/latest/api.html#bills)
+  Future<void> deleteBill(String id) =>
+      http.delete(authenticatedUri(Uri.parse('$projectUri/bills/$id')));
 }
