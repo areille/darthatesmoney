@@ -11,6 +11,6 @@ dev_dependencies:
   test: ^1.19.2
   very_good_analysis: ^5.0.0
 dependencies:
-  collection: ^1.18.0
+  collection: ^1.17.1
   http: ^1.1.0
   meta: ^1.9.1
