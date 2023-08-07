@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:darthatesmoney/src/model/bill.dart';
 import 'package:darthatesmoney/src/model/member.dart';
 import 'package:darthatesmoney/src/model/project_info.dart';
+import 'package:darthatesmoney/src/model/statistics.dart';
 import 'package:http/http.dart' as http;
 
 /// {@template darthatesmoney}
@@ -111,4 +112,20 @@ class Darthatesmoney {
   /// [Docs](https://ihatemoney.readthedocs.io/en/latest/api.html#bills)
   Future<void> deleteBill(String id) =>
       http.delete(authenticatedUri(Uri.parse('$projectUri/bills/$id')));
+
+  // ==========
+  // STATISTICS
+  // ==========
+
+  /// Lists a project stats.
+  ///
+  /// [Docs](https://ihatemoney.readthedocs.io/en/latest/api.html#statistics)
+  Future<List<Statistics>> listStatistics() async {
+    final response =
+        await http.get(authenticatedUri(Uri.parse('$projectUri/statistics')));
+
+    return (json.decode(response.body) as List<dynamic>)
+        .map((x) => Statistics.fromMap(x as Map<String, dynamic>))
+        .toList();
+  }
 }
