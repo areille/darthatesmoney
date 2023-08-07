@@ -36,7 +36,8 @@ final class ProjectInfo {
     );
   }
 
-  /// A factory constructor used to create a [ProjectInfo] from a [String] as json.
+  /// A factory constructor used to create a [ProjectInfo] from a [String] as
+  /// json.
   factory ProjectInfo.fromJson(String source) =>
       ProjectInfo.fromMap(json.decode(source) as Map<String, dynamic>);
 
@@ -57,6 +58,7 @@ final class ProjectInfo {
 
   @override
   String toString() {
+    // ignore: lines_longer_than_80_chars
     return 'ProjectInfo(id: $id, name: $name, contactEmail: $contactEmail, defaultCurrency: $defaultCurrency, members: $members)';
   }
 
